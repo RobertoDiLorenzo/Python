@@ -1,7 +1,7 @@
 
 ## Features
 
-☢ Deeply Reactive, Directly Mutate State at any level to Update Component
+☢  Fast simulation time
 
 🌿 Always Fresh State
 
@@ -32,60 +32,28 @@ No installation needed.
 
 Start always a fresh windows, this can help to avoid some issues.
 
-#### What does that mean ?
-
-
-
+<br/>
 
 ## ❓ FAQs
 
-<!-- faq 1 -->
+<!-- FAQ 1 -->
 <details>
-<summary>Can I use useRS hook more than once ? </summary>
+<summary>How can i change the parameters ? </summary>
 <br/>
 
-**Yes.** You don't have to put all of the state of the component inside the state object. You can use the hook more than once.
+✅ **Yes, you can change**. Open the main python script file and change the values of the parameters.
+
+❌ **Better not chage the code**.
 
 #### Example
 
-```javascript
-const todos = useRS([])
-const form = useRS({
-  name: '',
-  age: 0,
-})
+```python
+C = 1uF
+L= 10uH
 ```
-
-While this is okay, **I would advise you to not do this**, Because putting all of state in one object gives you **better *performance** in the case of radioactive-state. (because of better mutation batching)
-
-It would also be **hard to store simple value types**, because simple value types can not be mutated and so you would need to wrap it inside an object.
-
-#### Example
-
-```javascript
-const count = useRS(0) // invalid, gives error ❌
-```
-
-```javascript
-const count = useRS( { value: 0 }) // works ✅
-```
-
-This would also make creating reactive bindings awkward. That's why it is **strongly recommended to store all the state into a single object** by using useRS only once !
 
 ---
 </details>
-
-
-<!-- FAQ 2 -->
-<details>
-<summary> Is this magic, How does it work ? </summary>
-<br/>
-radioactive-state uses **JavaScript Proxy** to create a deeply reactive state by recursively proxifying the state. Whenever a mutation occurs in the state tree, a function is called with information about where the mutation took place which schedules an async re-render to update the component to reflect the changes in state to UI.
-</details>
-<br/>
-
-
-
 
 ## 💙 Contributing
 
@@ -103,12 +71,7 @@ Chat on [Linkedin](https://www.linkedin.com/in/roberto-di-lorenzo-phd-0b841997/ 
 ## 💖 Like this project ?
 
 Leave a ⭐ If you think this project is cool.
-
-[Share with the world](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FMananTank%2Fradioactive-state&via=MananTank_&text=Make%20your%20@react%20App%20Truly%20Reactive%20with%20radioactive-state&hashtags=react%2CradioactiveState) ✨
-
-<br/>
-
-
+✨
 
 
 ## 👨‍💻 Author
@@ -118,8 +81,6 @@ Leave a ⭐ If you think this project is cool.
 [Linkedin](https://www.linkedin.com/in/roberto-di-lorenzo-phd-0b841997/ "Roberto Di Lorenzo")
 
 <br/>
-
-
 
 
 ## 🍁 Licence
