@@ -72,7 +72,15 @@ for n in range(200):
     if n % 10 == 0:
         plt.clf()
         ax = plt.axes(projection='3d')
-        surf = ax.plot_surface(X,Y,V)
+        # Creating color map
+        my_cmap = plt.get_cmap('hot')
+        # Creating plot
+        surf = ax.plot_surface(X,Y,V, cmap = my_cmap, edgecolor ='none')
+        fig.colorbar(surf, ax = ax,
+                     shrink = 0.3, 
+                     aspect = 2)
+        
+        ax.set_title('Phi potential')
         #ax.set_zlim(-1, 2)
         plt.xlabel('x')
         plt.ylabel('y')
