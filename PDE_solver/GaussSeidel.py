@@ -77,6 +77,7 @@ for n in range(200):
         # Creating plot
         surf = ax.plot_surface(X,Y,V, cmap = my_cmap, edgecolor ='none')
         fig.colorbar(surf, ax = ax,
+                     pad=0.15,
                      shrink = 0.3, 
                      aspect = 2)
         
