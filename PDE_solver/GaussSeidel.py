@@ -20,15 +20,17 @@ import numpy as np
 # Make the grid
 xmin = 0
 xmax = 2
-Nx = 80
+Nx = 160
 x,hx = np.linspace(xmin,xmax,Nx,retstep = True)
 hx2 = hx**2
 ymin = 0
 ymax = 2
-Ny = 40
+Ny = 80
 y,hy = np.linspace(ymin,ymax,Ny,retstep = True)
 hy2 = hy**2
-X,Y = np.meshgrid(x,y,indexing='ij')
+# =========================================================================
+# Create necessary meshgrid and unravel grid from x,y. Define Nx, Ny
+X,Y = np.meshgrid(x,y,indexing='ij')   # 2D meshgrid
 # Initialize potential
 V = 0.5*np.ones_like(X)
 
@@ -39,35 +41,35 @@ ND = 1e16 *10e6            # m^-3
 q = 1.602e-19         # C
 epsilon0 = 8.85e-12   #F/m
 
+
+#==============================================================================
 # Enforce boundary conditions
-V[:,0] = 0
-V[:,-1] = 0
-V[0,:] = 0
-V[-1,:] = 0
+# Dirichlet/Neumann boundary conditions at outerwalls 
+# (boundary condition type is defined through boundary operators)
+V[:, 0] = 0      # Left border (all the values of x and y=ymin)
+V[:,-1] = 0     # Right border (all the values of x and y=ymax)
+V[0, :] = 0      # Bottom border (all the values of y and x=xmin)
+V[-1,:] = 0     # Top border (all the values of y and x=xmax)
 
 # Allow possibility of charge distribution
 #rho = np.zeros_like(X)
 #rho = np.e**(X**2 - Y**2)
-X11 = X[0:40, 0:40]
-X12 = X[40:80, 0:40]
+X11 = X[0:Nx//2, 0:Ny]   # Nx//2 Divisione intera
+X12 = X[Nx//2:Nx, 0:Ny]
 
 # RHO function
-#rho_p = -q*NA*np.ones_like(X)  # C/cm^3   # Vettore X dalla prima colonna fino alla colonna Ny-1
-#rho_n =  q*ND*np.ones_like(X)  # C/cm^3  # Vettore X dalla colonna Ny fino all'ultima colonna
-#rho = 10e6*(rho_p + rho_n) / epsilon0   # 
-
 rho_p = -q*NA*np.ones_like(X11)  # C/cm^3   
 rho_n =  q*ND*np.ones_like(X12)  # C/cm^3  
 # Concatenazione lungo l'asse delle colonne (verticale)
-rho =  np.concatenate((rho_p, rho_n), axis=0) / epsilon0   # 
-
-
+rho = np.concatenate((rho_p, rho_n), axis=0) / epsilon0   # 
 
 
 # Iterate
+max_iterations=200
 denom = 2/hx2 + 2/hy2
 fig = plt.figure(1)
-for n in range(200):
+
+for n in range(max_iterations):
     # make plots every few steps
     if n % 10 == 0:
         plt.clf()
@@ -78,11 +80,10 @@ for n in range(200):
         surf = ax.plot_surface(X,Y,V, cmap = my_cmap, edgecolor ='none')
         fig.colorbar(surf, ax = ax,
                      pad=0.15,
-                     shrink = 0.3, 
+                     shrink = 0.5, 
                      aspect = 2)
         
         ax.set_title('Phi potential')
-        #ax.set_zlim(-1, 2)
         plt.xlabel('x')
         plt.ylabel('y')
         plt.draw()
