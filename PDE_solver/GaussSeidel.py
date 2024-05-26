@@ -5,7 +5,7 @@
 // ####################################################################################
 //
 // File name   : GaussSeidel.py
-// Version     : 1.0
+// Version     : 1.1
 // Author      : Di Lorenzo
 // Date        : 23.05.2024
 // Notes       : 
@@ -20,12 +20,12 @@ import numpy as np
 # Make the grid
 xmin = 0
 xmax = 2
-Nx = 160
+Nx = 80
 x,hx = np.linspace(xmin,xmax,Nx,retstep = True)
 hx2 = hx**2
 ymin = 0
 ymax = 2
-Ny = 80
+Ny = 40
 y,hy = np.linspace(ymin,ymax,Ny,retstep = True)
 hy2 = hy**2
 # =========================================================================
@@ -44,7 +44,7 @@ epsilon0 = 8.85e-12   #F/m
 
 #==============================================================================
 # Enforce boundary conditions
-# Dirichlet/Neumann boundary conditions at outerwalls 
+# Dirichlet boundary conditions at outerwalls 
 # (boundary condition type is defined through boundary operators)
 V[:, 0] = 0      # Left border (all the values of x and y=ymin)
 V[:,-1] = 0     # Right border (all the values of x and y=ymax)
@@ -66,6 +66,10 @@ rho = np.concatenate((rho_p, rho_n), axis=0) / epsilon0   #
 
 # Iterate
 max_iterations=200
+tolerance=1e-6
+# Inizializzazione di un errore iniziale
+error = np.inf  # Inizializziamo l'errore a infinito
+
 denom = 2/hx2 + 2/hy2
 fig = plt.figure(1)
 
@@ -87,10 +91,20 @@ for n in range(max_iterations):
         plt.xlabel('x')
         plt.ylabel('y')
         plt.draw()
-        plt.pause(0.1)
-# Iterate the solution
+        plt.pause(0.05)
+        # Calcolo dell'errore tra le iterazioni successive
+    previous_V = V.copy()  # Copia del potenziale precedente
+    
+    # Iterate the solution
     for j in range(1,Nx-1):
         for k in range(1,Ny-1):
             V[j,k] = ( (V[j+1,k] + V[j-1,k])/hx2
                       +(V[j,k+1] + V[j,k-1])/hy2
                       +rho[j,k]) / denom
+    error = np.max(np.abs(V - previous_V)) # Calcolo dell'errore massimo
+    # Verifica se l'errore è inferiore alla soglia di tolleranza
+    if error < tolerance:
+        print(f"Convergenza raggiunta dopo {n+1} iterazioni con errore {error:.2e}")
+        break  # Esce dal ciclo
+else:
+    print(f"Convergenza non raggiunta dopo {max_iterations} iterazioni con errore {error:.2e}")
