@@ -68,8 +68,8 @@ start_time = time.time()
 ##=====================================
 # Make the grid
 # length
-Lx = 4 #m
-Ly = 2 #m
+Lx = 5 #m
+Ly = 5 #m
 density_grid = 100   # [ptr/m^2]
 ptr_grid= int(Lx*Ly*density_grid)
 
@@ -109,7 +109,7 @@ dt = min(hx**2, hy**2) / (4 * alpha)
 V = np.full((Nx, Ny), 20.0)  # Plate initially as 20 degrees °C
 
 # Initialize potential with heating point at the center X and Y are swapped
-heating_point_x = int(Nx - Nx / 2) # Coordinata y del punto di riscaldamento
+heating_point_x = int( Nx - Nx / 2) # Coordinata y del punto di riscaldamento
 heating_point_y = int( Ny / 2)     # Coordinata x del punto di riscaldamento
 #Initialize source
 S = np.full((Nx, Ny), 20.0)
@@ -120,7 +120,7 @@ heating_size = 1*density_grid
 # Enforce boundary conditions
 top_border    = 0#np.linspace(0, 100, Ny)      # Top border (all the values of ymax between xmin and xmax)
 bottom_border = 0#np.linspace(0, 100, Ny)      # Bottom border (all the values of ymin between xmin and xmax)
-left_border   = 0# np.linspace(0, 100, Nx)          # Left border (the values of xmin between ymin and ymax)
+left_border   = 0# np.linspace(0, 100, Nx)     # Left border (the values of xmin between ymin and ymax)
 right_border  = 0#np.linspace(0, 100, Nx)      # Right border (the values of xmax between ymin and ymax)
 # Dirichlet boundary conditions at outerwalls
 # (boundary condition type is defined through boundary operators)
@@ -151,11 +151,11 @@ while counter < sim_time:
     for j in range(1, Nx-1):
         for k in range(1, Ny-1):
             # Aggiungere il contributo della sorgente termica con il ciclo if
-            if circle_source(j,k,heating_point_x,heating_point_y,heating_size):#square_source(j,k,Nx,Ny,heating_size):
+            if square_source(j,k,heating_point_x,heating_point_y,heating_size):#circle_source(j,k,heating_point_x,heating_point_y,heating_size):#
                 #if DEBUG == 1:
                     #print("non faccio nulla")
                 S[j,k] = 100  # Celsius
-                V[j,k]=S[j,k]
+                V[j,k] = S[j,k]
             else:
                 dd_ux = (V[j+1, k] + V[j-1, k] - 2*V[j, k]) / hx2
                 dd_uy = (V[j, k+1] + V[j, k-1] - 2*V[j, k]) / hy2
@@ -163,7 +163,7 @@ while counter < sim_time:
                 
                     
     counter += dt
-    print("t: {:.3f} [s], Average temperature: {:.2f} Celcius".format(counter, np.average(V)))
+    # print("t: {:.3f} [s], Average temperature: {:.2f} Celcius".format(counter, np.average(V)))
     if DEBUG == 1:
         if n % 2 == 0:
             # Updating the plot
