@@ -68,8 +68,8 @@ start_time = time.time()
 ##=====================================
 # Make the grid
 # length
-Lx = 5 #m
-Ly = 5 #m
+Lx = 4 #m
+Ly = 2 #m
 density_grid = 100   # [ptr/m^2]
 ptr_grid= int(Lx*Ly*density_grid)
 
@@ -102,15 +102,15 @@ DEBUG=0
 
 #==========================================================================
 # time vector
-sim_time = 5  # seconds
+sim_time = 1  # seconds
 dt = min(hx**2, hy**2) / (4 * alpha)
 #==========================================================================
 # Initialize potential
 V = np.full((Nx, Ny), 20.0)  # Plate initially as 20 degrees °C
 
-# Initialize potential with heating point at the center
-heating_point_x = int(Ny - Ny / 4)  # Coordinata x del punto di riscaldamento
-heating_point_y = int(Nx / 4)  # Coordinata y del punto di riscaldamento
+# Initialize potential with heating point at the center X and Y are swapped
+heating_point_x = int(Nx - Nx / 2) # Coordinata y del punto di riscaldamento
+heating_point_y = int( Ny / 2)     # Coordinata x del punto di riscaldamento
 #Initialize source
 S = np.full((Nx, Ny), 20.0)
 heating_size = 1*density_grid
