@@ -109,8 +109,8 @@ dt = min(hx**2, hy**2) / (4 * alpha)
 V = np.full((Nx, Ny), 20.0)  # Plate initially as 20 degrees °C
 
 # Initialize potential with heating point at the center
-heating_point_x = int(Nx / 2)  # Coordinata x del punto di riscaldamento
-heating_point_y = int(Ny / 2)  # Coordinata y del punto di riscaldamento
+heating_point_x = int(Ny - Ny / 4)  # Coordinata x del punto di riscaldamento
+heating_point_y = int(Nx / 4)  # Coordinata y del punto di riscaldamento
 #Initialize source
 S = np.full((Nx, Ny), 20.0)
 heating_size = 1*density_grid
