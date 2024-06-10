@@ -96,7 +96,7 @@ X, Y = np.meshgrid(x, y, indexing='ij')   # 2D meshgrid
 density = 2330  # density [kg/m^3]
 cp = 700  # Specific heat [J/(kg*°C)]
 k0 = 150  # thermal conductivity [J/s*m*°C]
-alpha = k0/(density * cp)#8.0*np.e-5  # Thermal diffusivity [m^2/s]   0.8[cm^2/s]
+alpha = k0/(density * cp) # Thermal diffusivity [m^2/s]   0.8[cm^2/s]
 
 DEBUG=0
 
@@ -144,7 +144,7 @@ if DEBUG==1:
 # Simulating
 n = 0
 counter = 0
-denom = 2/hx2 + 2/hy2
+#denom = 2/hx2 + 2/hy2
 while counter < sim_time:
     previous_V = V.copy()  # Copia del potenziale precedente
     # Iterate the solution
