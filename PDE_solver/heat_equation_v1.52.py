@@ -70,7 +70,7 @@ start_time = time.time()
 # length
 Lx = 5 #m
 Ly = 5 #m
-density_grid = 100   # [ptr/m^2]
+density_grid = 20   # [ptr/m^2]
 ptr_grid= int(Lx*Ly*density_grid)
 
 
@@ -96,21 +96,21 @@ X, Y = np.meshgrid(x, y, indexing='ij')   # 2D meshgrid
 density = 2330  # density [kg/m^3]
 cp = 700  # Specific heat [J/(kg*°C)]
 k0 = 150  # thermal conductivity [J/s*m*°C]
-alpha = k0/(density * cp) # Thermal diffusivity [m^2/s]   0.8[cm^2/s]
+alpha = k0/(density * cp)  # Thermal diffusivity [m^2/s]   0.8[cm^2/s]
 
 DEBUG=0
 
 #==========================================================================
 # time vector
-sim_time = 1  # seconds
+sim_time = 1000  # seconds
 dt = min(hx**2, hy**2) / (4 * alpha)
 #==========================================================================
 # Initialize potential
 V = np.full((Nx, Ny), 20.0)  # Plate initially as 20 degrees °C
 
-# Initialize potential with heating point at the center X and Y are swapped
-heating_point_x = int( Nx - Nx / 2) # Coordinata y del punto di riscaldamento
-heating_point_y = int( Ny / 2)     # Coordinata x del punto di riscaldamento
+# Initialize potential with heating point at the center
+heating_point_x = int(Nx - Nx / 4)  # Coordinata y del punto di riscaldamento
+heating_point_y = int(Ny / 2)  # Coordinata x del punto di riscaldamento
 #Initialize source
 S = np.full((Nx, Ny), 20.0)
 heating_size = 1*density_grid
@@ -120,7 +120,7 @@ heating_size = 1*density_grid
 # Enforce boundary conditions
 top_border    = 0#np.linspace(0, 100, Ny)      # Top border (all the values of ymax between xmin and xmax)
 bottom_border = 0#np.linspace(0, 100, Ny)      # Bottom border (all the values of ymin between xmin and xmax)
-left_border   = 0# np.linspace(0, 100, Nx)     # Left border (the values of xmin between ymin and ymax)
+left_border   = 0# np.linspace(0, 100, Nx)          # Left border (the values of xmin between ymin and ymax)
 right_border  = 0#np.linspace(0, 100, Nx)      # Right border (the values of xmax between ymin and ymax)
 # Dirichlet boundary conditions at outerwalls
 # (boundary condition type is defined through boundary operators)
@@ -144,18 +144,18 @@ if DEBUG==1:
 # Simulating
 n = 0
 counter = 0
-#denom = 2/hx2 + 2/hy2
+denom = 2/hx2 + 2/hy2
 while counter < sim_time:
     previous_V = V.copy()  # Copia del potenziale precedente
     # Iterate the solution
     for j in range(1, Nx-1):
         for k in range(1, Ny-1):
             # Aggiungere il contributo della sorgente termica con il ciclo if
-            if square_source(j,k,heating_point_x,heating_point_y,heating_size):#circle_source(j,k,heating_point_x,heating_point_y,heating_size):#
+            if circle_source(j,k,heating_point_x,heating_point_y,heating_size):#square_source(j,k,Nx,Ny,heating_size):
                 #if DEBUG == 1:
                     #print("non faccio nulla")
                 S[j,k] = 100  # Celsius
-                V[j,k] = S[j,k]
+                V[j,k]=S[j,k]
             else:
                 dd_ux = (V[j+1, k] + V[j-1, k] - 2*V[j, k]) / hx2
                 dd_uy = (V[j, k+1] + V[j, k-1] - 2*V[j, k]) / hy2
@@ -163,7 +163,7 @@ while counter < sim_time:
                 
                     
     counter += dt
-    # print("t: {:.3f} [s], Average temperature: {:.2f} Celcius".format(counter, np.average(V)))
+    print("t: {:.3f} [s], Average temperature: {:.2f} Celcius".format(counter, np.average(V)))
     if DEBUG == 1:
         if n % 2 == 0:
             # Updating the plot
